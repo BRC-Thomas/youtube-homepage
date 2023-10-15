@@ -4,9 +4,14 @@ import { twMerge } from "tailwind-merge";
 
 const buttonStyles = cva(["transisition-colors"], {
   variants: {
-    variant:{
-      default: ["bg-secondary","hover:bg-secondary-hover"],
+    variant: {
+      default: ["bg-secondary", "hover:bg-secondary-hover"],
       ghost: ["hover:bg-gray-100"],
+      dark: [
+        "bg-secondary-dark",
+        "hover:bg-secondary-dark-hover",
+        "text-secondary",
+      ],
     },
     size: {
       default: ["rounded", "p-2"],
@@ -23,13 +28,18 @@ const buttonStyles = cva(["transisition-colors"], {
   },
   defaultVariants: {
     variant: "default",
-    size: "default"
-  }
+    size: "default",
+  },
 });
 
-type ButtonProps= VariantProps<typeof buttonStyles> & ComponentProps<"button">
+type ButtonProps = VariantProps<typeof buttonStyles> & ComponentProps<"button">;
 
-function Button({variant, size, className, ...props}: ButtonProps ) {
-  return <button {...props} className={twMerge(buttonStyles({variant, size}), className)}></button>;
+function Button({ variant, size, className, ...props }: ButtonProps) {
+  return (
+    <button
+      {...props}
+      className={twMerge(buttonStyles({ variant, size }), className)}
+    ></button>
+  );
 }
 export default Button;
