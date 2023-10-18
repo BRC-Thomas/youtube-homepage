@@ -25,11 +25,18 @@ import Button, { buttonStyles } from "../components/Button";
 import { twMerge } from "tailwind-merge";
 import { Children, ReactNode, useState } from "react";
 import { playlists, subscriptions } from "../data/sidebar";
+import { useSideBarContext } from "../contexts/SidebarContext";
+import { PageHeaderFirstSection } from "./PageHeader";
 
 function Sidebar() {
+  const { isLargeOpen, isSmallOpen, close } = useSideBarContext();
   return (
     <>
-      <aside className="sticky top-0 overflow-y-auto scrollbar-hidden p-4 flex flex-col ml-1 lg:hidden">
+      <aside
+        className={`sticky top-0 overflow-y-auto scrollbar-hidden pb-4 ml-1 flex flex-col ${
+          isLargeOpen ? "lg:hidden" : "lg:flex"
+        }`}
+      >
         <SmallSidebarItem IconOrImgUrl={Home} title="Home" url="/" />
         <SmallSidebarItem IconOrImgUrl={Repeat} title="Shorts" url="/shorts" />
         <SmallSidebarItem
@@ -43,7 +50,20 @@ function Sidebar() {
           url="/library"
         />
       </aside>
-      <aside className="w-56 hidden lg:sticky absolute top-0 overflow-x-auto scrollbar-hidden pb-4  flex-col gap-2 px-2 lg:flex">
+      {isSmallOpen && (
+        <div
+          onClick={close}
+          className="lg:hidden fixed inset-0 z-[999] bg-secondary-dark opacity-50 "
+        ></div>
+      )}
+      <aside
+        className={`w-56 lg:sticky absolute top-0 overflow-x-auto scrollbar-hidden pb-4  flex-col gap-2 px-2 ${
+          isLargeOpen ? "lg:flex" : "hidden"
+        } ${isSmallOpen ? "flex z-[999] bg-white max-h-screen" : "hidden"}`}
+      >
+        <div className="lg:hidden pt-2 pb-4 px-2 sticky top-0 bg-white">
+          <PageHeaderFirstSection />
+        </div>
         <LargeSidebarSection>
           <LargeSidebarItem isActive IconOrImgUrl={Home} title="Home" url="/" />
           <LargeSidebarItem
@@ -87,16 +107,16 @@ function Sidebar() {
         <LargeSidebarSection title="Subscriptions">
           {subscriptions.map((subscription) => (
             <LargeSidebarItem
-            key={subscription.id}
-            IconOrImgUrl={subscription.imgUrl}
-            title={subscription.channelName}
-            url={`/@${subscription.id}`}
-          />
+              key={subscription.id}
+              IconOrImgUrl={subscription.imgUrl}
+              title={subscription.channelName}
+              url={`/@${subscription.id}`}
+            />
           ))}
         </LargeSidebarSection>
         <hr />
         <LargeSidebarSection title="Explorer">
-        <LargeSidebarItem
+          <LargeSidebarItem
             IconOrImgUrl={Flame}
             title="Trending"
             url="/trending"
